@@ -64,20 +64,22 @@ const galleryItems = [
   },
 ];
 
+
 const refs = {
-  // openModal: document.querySelector(),
-  imageGalleryContainer:document.querySelector ('.js-gallery'),
+  imageGalleryContainer:document.querySelector('.js-gallery'),
   divEl: document.querySelector ('.js-lightbox'),
   backdrop: document.querySelector ('.lightbox__overlay'),
   modalmgEl: document.querySelector ('.lightbox__image'),
-  closeModalBtn:document.querySelector ('.lightbox__button'),
+  closeModalBtn:document.querySelector ('button[data-action ="close-lightbox"]'),
 };
 
 const  imageGalleryMarkup = createImageGalleryMarkup (galleryItems);
 refs.imageGalleryContainer.insertAdjacentHTML("beforeend", imageGalleryMarkup);
 
-refs.imageGalleryContainer.addEventListener('clik',onImageGalleryCLick)
-refs.closeModalBtn.addEventListener('clik',onCloseModalBtnCLick)
+refs.imageGalleryContainer.addEventListener('click', onImageGalleryClick);
+refs.closeModalBtn.addEventListener('click', onCloseModalBtnCLick);
+refs.backdrop.addEventListener('click', onBackdropCLick);
+
 
 function createImageGalleryMarkup (galleryItems){
   return  galleryItems
@@ -102,28 +104,85 @@ function createImageGalleryMarkup (galleryItems){
 
 }
 
-function addClassListIsOpen() {
-refs.divEl.classList.add('is-open');
-}
-
-function onImageGalleryCLick(evt){
-  const isGalleryItemEl = evt.target.classList.contains('gallery__item');
-  // console.log(evt.target)
-  // console.log(evt.currentTarget)
-  if(!isGalleryItemEl){
-    return
+ 
+function onImageGalleryClick(event) {
+  // console.log(event.target)
+  // console.log(event.currentTarget)
+  if (!event.target.classList.contains('gallery__image')) {
+    return;
   }
-evt.preventDefault();
-addClassListIsOpen();
+event.preventDefault();
 
+refs.divEl.classList.add('is-open');
+refs.modalmgEl.src = event.target.dataset.source;
+refs.modalmgEl.alt = event.target.getAttribute('alt');
+
+
+window.addEventListener('keydown', onESCBtnPress);
+window.addEventListener('keydown', onArrowBtnPress);
 }
 
-function onCloseModalBtnCLick (evt){
-  refs.divEl.remove.classList ('is-open');
+function onCloseModalBtnCLick (e){
+  refs.divEl.classList.remove('is-open');
+  window.removeEventListener('keydown', onESCBtnPress);
   refs.modalmgEl.src ='';
   refs.modalmgEl.alt ='';
 }
 
+function onBackdropCLick(e){
+if (e.currentTarget === e.target){
+  onCloseModalBtnCLick();
+}
+}
 
+function onESCBtnPress(e){
+  if (e.code === 'Escape'){
+    onCloseModalBtnCLick();
+  }
+}
+
+function onArrowBtnPress (e){
+  if (e.code === 'ArrowRight'){
+  return goToTheRight();
+  // console.log('to the right')
+  }
+  if (e.code === 'ArrowLeft'){
+    return goToTheLeft();
+    // console.log('to the left')
+  }
+}
+
+
+function goToTheRight() {
+  const src = refs.modalmgEl.src;
+  let newArr = galleryItems.map(item => item)
+ 
+  for (let i = 0; i < newArr.length-1; i+=1){
+    if (newArr[i].original === src) {
+      refs.modalmgEl.src = newArr[i + 1].original;
+      refs.modalmgEl.alt = newArr[i + 1].description;
+      }
+
+  }
+}
+  
+
+function goToTheLeft() {
+  const src = refs.modalmgEl.src;
+  let newArr = galleryItems.map(item => item)
+ 
+  for (let i = 0; i < newArr.length-1; i+=1){
+    if (newArr[i].original === src) {
+      refs.modalmgEl.src = newArr[i - 1].original;
+      refs.modalmgEl.alt = newArr[i - 1].description;
+      }
+    
+  }
+};
+
+
+
+// refs.modalmgEl.src = newArr[0].original;
+// refs.modalmgEl.alt = newArr[0].description;
 
 
