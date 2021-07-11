@@ -153,36 +153,57 @@ function onArrowBtnPress (e){
 }
 
 
-function goToTheRight() {
-  const src = refs.modalmgEl.src;
-  let newArr = galleryItems.map(item => item)
+// function goToTheRight() {
+//   const src = refs.modalmgEl.src;
+//   let newArr = galleryItems.map(item => item)
  
-  for (let i = 0; i < newArr.length-1; i+=1){
-    if (newArr[i].original === src) {
-      refs.modalmgEl.src = newArr[i + 1].original;
-      refs.modalmgEl.alt = newArr[i + 1].description;
-      }
+//   for (let i = 0; i < newArr.length-1; i+=1){
+//     if (newArr[i].original === src) {
+//       refs.modalmgEl.src = newArr[i + 1].original;
+//       refs.modalmgEl.alt = newArr[i + 1].description;
+//       }
 
-  }
-}
+//   }
+// }
   
 
-function goToTheLeft() {
-  const src = refs.modalmgEl.src;
-  let newArr = galleryItems.map(item => item)
+// function goToTheLeft() {
+//   const src = refs.modalmgEl.src;
+//   let newArr = galleryItems.map(item => item)
  
-  for (let i = 0; i < newArr.length-1; i+=1){
-    if (newArr[i].original === src) {
-      refs.modalmgEl.src = newArr[i - 1].original;
-      refs.modalmgEl.alt = newArr[i - 1].description;
-      }
+//   for (let i = 0; i < newArr.length-1; i+=1){
+//     if (newArr[i].original === src) {
+//       refs.modalmgEl.src = newArr[i - 1].original;
+//       refs.modalmgEl.alt = newArr[i - 1].description;
+//       }
     
+//   }
+// };
+
+
+function goToTheRight(e) {
+
+    const sources = galleryItems.map(({ original }) => original);
+    let indexOfCurrentImg = sources.indexOf(refs.modalmgEl.src);
+
+    if (indexOfCurrentImg === 0) {
+      indexOfCurrentImg = sources.length;
+    }
+    refs.modalmgEl.src = sources[indexOfCurrentImg - 1];
+    console.log(indexOfCurrentImg);
   }
-};
 
 
+function goToTheLeft(e) {
 
-// refs.modalmgEl.src = newArr[0].original;
-// refs.modalmgEl.alt = newArr[0].description;
 
+    const sources = galleryItems.map(({ original }) => original);
+    let indexOfCurrentImg = sources.indexOf(refs.modalmgEl.src);
+
+    if (indexOfCurrentImg + 1 > sources.length - 1) {
+      indexOfCurrentImg = -1;
+    }
+    refs.modalmgEl.src = sources[indexOfCurrentImg + 1];
+    console.log(indexOfCurrentImg + 1);
+  }
 
